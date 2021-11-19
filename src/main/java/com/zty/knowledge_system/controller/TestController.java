@@ -23,4 +23,10 @@ public class TestController {
     public String hello(){
         return "Hello World!";
     }
+
+    @PostMapping("/hello/post")
+    // GET POST DELETE  PUT
+    public String hello(String name){
+        return "Hello World!"+name;
+    }
 }
