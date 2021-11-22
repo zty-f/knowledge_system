@@ -12,7 +12,7 @@
           @change="handleTableChange"
       >
         <template #cover="{ text:cover }">
-          <img v-if="cover" :src="cover" alt="avatar" />
+          <img class="coverImage" v-if="cover" :src="cover" alt="avatar"/>
         </template>
 
         <template v-slot:action="{ text,record }">
@@ -121,5 +121,13 @@ export default defineComponent({
     }
   }
 });
-
 </script>
+
+<style>
+.coverImage {
+  vertical-align: middle;
+  border-style: none;
+  width: 80px;
+  height: 80px;
+}
+</style>
