@@ -111,13 +111,14 @@ export default defineComponent({
     return{
       ebooks,
       ebooks2:toRef(ebooks1,"books"),
+      /*分页功能
       listData,
       pagination : {
         onChange: (page: any) => {
           console.log(page);
         },
         pageSize: 3,
-      },
+      },*/
       actions:  [
       { type: 'StarOutlined', text: '156' },
       { type: 'LikeOutlined', text: '156' },
