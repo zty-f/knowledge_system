@@ -27,30 +27,36 @@ import java.util.List;
 
 @Service
 public class EbookService {
-    private static final Logger LOG  = LoggerFactory.getLogger(EbookService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);
     @Resource
     private EbookMapper ebookMapper;
 
-    public PageResp<EbookResp> list(EbookReq req){
+    public PageResp<EbookResp> list(EbookReq req) {
         EbookExample example = new EbookExample();
         EbookExample.Criteria criteria = example.createCriteria();
-        if(!ObjectUtils.isEmpty(req.getName())){
-            criteria.andNameLike("%"+req.getName()+"%");
+        if (!ObjectUtils.isEmpty(req.getName())) {
+            criteria.andNameLike("%" + req.getName() + "%");
         }
         // 增加查询支持分页功能
-        PageHelper.startPage(req.getPage(),req.getSize());
+        PageHelper.startPage(req.getPage(), req.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(example);
 
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
-        LOG.info("总行数：{}",pageInfo.getTotal()); //总行数
-        LOG.info("总页数：{}",pageInfo.getPages()); //总页数
+        LOG.info("总行数：{}", pageInfo.getTotal()); //总行数
+        LOG.info("总页数：{}", pageInfo.getPages()); //总页数
         // 使用工具类复制列表
         List<EbookResp> respList = CopyUtil.copyList(ebookList, EbookResp.class);
         PageResp<EbookResp> pageResp = new PageResp<>();
         pageResp.setList(respList);
         pageResp.setTotal(pageInfo.getTotal());
         return pageResp;
+    }
 
+    public List<EbookResp> all() {
+        EbookExample example = new EbookExample();
+        List<Ebook> ebookList = ebookMapper.selectByExample(example);
+        List<EbookResp> respList = CopyUtil.copyList(ebookList, EbookResp.class);
+        return respList;
     }
 
 }
