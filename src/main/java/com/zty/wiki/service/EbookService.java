@@ -15,6 +15,7 @@ import com.zty.wiki.domain.EbookExample;
 import com.zty.wiki.mapper.EbookMapper;
 import com.zty.wiki.req.EbookReq;
 import com.zty.wiki.resp.EbookResp;
+import com.zty.wiki.resp.PageResp;
 import com.zty.wiki.util.CopyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,23 +31,25 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public List<EbookResp> list(EbookReq req){
+    public PageResp<EbookResp> list(EbookReq req){
         EbookExample example = new EbookExample();
         EbookExample.Criteria criteria = example.createCriteria();
         if(!ObjectUtils.isEmpty(req.getName())){
             criteria.andNameLike("%"+req.getName()+"%");
         }
         // 增加查询支持分页功能
-        PageHelper.startPage(1,3);
+        PageHelper.startPage(req.getPage(),req.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(example);
 
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
         LOG.info("总行数：{}",pageInfo.getTotal()); //总行数
         LOG.info("总页数：{}",pageInfo.getPages()); //总页数
-
         // 使用工具类复制列表
         List<EbookResp> respList = CopyUtil.copyList(ebookList, EbookResp.class);
-        return respList;
+        PageResp<EbookResp> pageResp = new PageResp<>();
+        pageResp.setList(respList);
+        pageResp.setTotal(pageInfo.getTotal());
+        return pageResp;
 
     }
 
