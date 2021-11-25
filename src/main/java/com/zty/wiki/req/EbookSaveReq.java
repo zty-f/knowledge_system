@@ -1,6 +1,6 @@
-package com.zty.wiki.resp;
+package com.zty.wiki.req;
 
-public class EbookResp {
+public class EbookSaveReq {
     private Long id;
 
     private String name;

@@ -8,14 +8,13 @@
  **/
 package com.zty.wiki.controller;
 
-import com.zty.wiki.req.EbookReq;
+import com.zty.wiki.req.EbookQueryReq;
+import com.zty.wiki.req.EbookSaveReq;
 import com.zty.wiki.resp.CommonResp;
-import com.zty.wiki.resp.EbookResp;
+import com.zty.wiki.resp.EbookQueryResp;
 import com.zty.wiki.resp.PageResp;
 import com.zty.wiki.service.EbookService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -29,17 +28,24 @@ public class EbookController {
 
     @GetMapping("/all")
     public CommonResp all(){
-        CommonResp<List<EbookResp>> resp = new CommonResp<>();
-        List<EbookResp> list= ebookService.all();
+        CommonResp<List<EbookQueryResp>> resp = new CommonResp<>();
+        List<EbookQueryResp> list= ebookService.all();
         resp.setContent(list);
         return resp;
     }
 
     @GetMapping("/list")
-    public CommonResp list(EbookReq req){
-        CommonResp<PageResp<EbookResp>> resp = new CommonResp<>();
-        PageResp<EbookResp> list= ebookService.list(req);
+    public CommonResp list(EbookQueryReq req){
+        CommonResp<PageResp<EbookQueryResp>> resp = new CommonResp<>();
+        PageResp<EbookQueryResp> list= ebookService.list(req);
         resp.setContent(list);
+        return resp;
+    }
+
+    @PostMapping("/save")
+    public CommonResp save(@RequestBody EbookSaveReq req){
+        CommonResp resp = new CommonResp<>();
+        ebookService.save(req);
         return resp;
     }
 
