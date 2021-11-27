@@ -18,6 +18,7 @@ import com.zty.wiki.req.EbookSaveReq;
 import com.zty.wiki.resp.EbookQueryResp;
 import com.zty.wiki.resp.PageResp;
 import com.zty.wiki.util.CopyUtil;
+import com.zty.wiki.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,9 @@ public class EbookService {
     private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);
     @Resource
     private EbookMapper ebookMapper;
+
+    @Resource
+    private SnowFlake snowFlake;
 
     public PageResp<EbookQueryResp> list(EbookQueryReq req) {
         EbookExample example = new EbookExample();
@@ -67,6 +71,10 @@ public class EbookService {
       Ebook ebook = CopyUtil.copy(req,Ebook.class);
       if(ObjectUtils.isEmpty(req.getId())){
           //新增
+          ebook.setId(snowFlake.nextId());
+          ebook.setDocCount(0);
+          ebook.setViewCount(0);
+          ebook.setVoteCount(0);
           ebookMapper.insert(ebook);
       }else{
           // 更新
