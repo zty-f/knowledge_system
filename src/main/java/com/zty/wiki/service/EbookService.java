@@ -36,6 +36,9 @@ public class EbookService {
     @Resource
     private SnowFlake snowFlake;
 
+    /**
+     * 分页查询
+     */
     public PageResp<EbookQueryResp> list(EbookQueryReq req) {
         EbookExample example = new EbookExample();
         EbookExample.Criteria criteria = example.createCriteria();
@@ -80,6 +83,13 @@ public class EbookService {
           // 更新
           ebookMapper.updateByPrimaryKey(ebook);
       }
+    }
+
+    /**
+     * 删除
+     */
+    public void delete(Long id){
+        ebookMapper.deleteByPrimaryKey(id);
     }
 
 }
