@@ -65,13 +65,9 @@ public class CategoryService {
      * 全部查询
      * @return
      */
-    public List<CategoryQueryResp> all(CategoryQueryReq req) {
+    public List<CategoryQueryResp> all() {
         CategoryExample example = new CategoryExample();
         example.setOrderByClause("sort asc");
-        CategoryExample.Criteria criteria = example.createCriteria();
-        if (!ObjectUtils.isEmpty(req.getName())) {
-            criteria.andNameLike("%" + req.getName() + "%");
-        }
         List<Category> categoryList = categoryMapper.selectByExample(example);
         List<CategoryQueryResp> respList = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
         return respList;

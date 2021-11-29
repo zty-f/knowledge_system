@@ -6,20 +6,14 @@
       <p>
         <a-form layout="inline" :model="param">
           <a-form-item>
-            <a-input-search
-                v-model:value="param.name"
-                placeholder="名称"
-                enter-button="搜索"
-                size="large"
-                @search="handleQuery()"
-            />
+            <a-button type="primary" @click="handleQuery()" size="large">查询</a-button>
           </a-form-item>
           <a-button type="primary"  @click="add()" size="large">新增</a-button>
         </a-form>
       </p>
       <a-table
           :columns="columns"
-          :data-source="categorys"
+          :data-source="level1"
           :row-key="record => record.id"
           :loading="loading"
           :pagination="false"
@@ -103,19 +97,32 @@ export default defineComponent({
     ];
 
     /**
+     *  一级分类树，children属性就是二级分类
+     *  [{
+     *      id:""
+     *      name:""
+     *      children:[{
+     *          id:""
+     *          name:""
+     *          ]}
+     *  }]
+    **/
+    const level1 = ref(); //一级分类树，children属性就是二级分类
+    /**
      * 数据查询
      **/
     const handleQuery = () => {
       loading.value = true;
-      axios.get("/category/all", {
-        params:{
-          name:param.value.name
-        }
-      }).then((response) => {
+      axios.get("/category/all").then((response) => {
         loading.value = false;
         const data = response.data;
         if(data.success){
           categorys.value = data.content;
+          console.log("原始数组：",categorys.value);
+
+          level1.value = [];
+          level1.value = Tool.array2Tree(categorys.value,0);
+          console.log("树形结构：",level1);
         }else {
           message.error(data.message);
         }
@@ -175,7 +182,8 @@ export default defineComponent({
     });
 
     return {
-      categorys,
+      // categorys,
+      level1,
       columns,
       loading,
       param,
