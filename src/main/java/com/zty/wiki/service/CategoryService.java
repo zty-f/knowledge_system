@@ -41,6 +41,7 @@ public class CategoryService {
      */
     public PageResp<CategoryQueryResp> list(CategoryQueryReq req) {
         CategoryExample example = new CategoryExample();
+        example.setOrderByClause("sort asc");
         CategoryExample.Criteria criteria = example.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName())) {
             criteria.andNameLike("%" + req.getName() + "%");
@@ -60,8 +61,17 @@ public class CategoryService {
         return pageResp;
     }
 
-    public List<CategoryQueryResp> all() {
+    /**
+     * 全部查询
+     * @return
+     */
+    public List<CategoryQueryResp> all(CategoryQueryReq req) {
         CategoryExample example = new CategoryExample();
+        example.setOrderByClause("sort asc");
+        CategoryExample.Criteria criteria = example.createCriteria();
+        if (!ObjectUtils.isEmpty(req.getName())) {
+            criteria.andNameLike("%" + req.getName() + "%");
+        }
         List<Category> categoryList = categoryMapper.selectByExample(example);
         List<CategoryQueryResp> respList = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
         return respList;
