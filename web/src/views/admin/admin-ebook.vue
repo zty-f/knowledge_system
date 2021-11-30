@@ -28,7 +28,9 @@
         <template #cover="{ text:cover }">
           <img class="coverImage" v-if="cover" :src="cover" alt="avatar"/>
         </template>
-
+        <template v-slot:category="{ text, record}">
+          <span>{{getCategoryName(record.category1Id)}}/{{getCategoryName(record.category2Id)}}</span>
+        </template>
         <template v-slot:action="{ text,record }">
           <a-space size="small">
             <a-button type="primary"  @click="edit(record)">编辑</a-button>
@@ -63,8 +65,8 @@
       <a-form-item label="分类">
         <a-cascader
             v-model:value="categoryIds"
-            :options="level1"
             :field-names="{label:'name',value:'id',children:'children'}"
+            :options="level1"
         />
       </a-form-item>
       <a-form-item label="描述">
@@ -104,14 +106,8 @@ export default defineComponent({
         dataIndex: 'name'
       },
       {
-        title: '分类一',
-        key: 'category1Id',
-        dataIndex: 'category1Id'
-      },
-      {
-        title: '分类二',
-        key: 'category2Id',
-        dataIndex: 'category2Id'
+        title: '分类',
+        slots: {customRender: 'category'}
       },
       {
         title: '文档数',
@@ -230,6 +226,7 @@ export default defineComponent({
     };
 
     const level1 = ref(); //一级分类树，children属性就是二级分类
+    let categorys:any;
     /**
      * 查询所有分类
      **/
@@ -239,9 +236,8 @@ export default defineComponent({
         loading.value = false;
         const data = response.data;
         if(data.success){
-          const categorys = data.content;
-          console.log("原始数组：",categorys.value);
-
+          categorys = data.content;
+          console.log("原始数组：",categorys);
           level1.value = [];
           level1.value = Tool.array2Tree(categorys,0);
           console.log("树形结构：",level1);
@@ -249,6 +245,23 @@ export default defineComponent({
           message.error(data.message);
         }
       });
+    };
+
+    /**
+     * 根据分类id获取分类名称
+     * @param cid
+     */
+    const getCategoryName = (cid: number) => {
+      let result = "";
+      if(categorys){
+        categorys.forEach((item: any) => {
+          if (item.id === cid) {
+            // return item.name; // 注意，这里直接return不起作用
+            result = item.name;
+          }
+        });
+      }
+      return result;
     };
 
     onMounted(() => {
@@ -266,6 +279,7 @@ export default defineComponent({
       loading,
       param,
 
+      getCategoryName,
       handleTableChange,
       edit,
       add,
