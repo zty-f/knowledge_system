@@ -132,6 +132,8 @@ export default defineComponent({
      * 数据查询
      **/
     const handleQuery = (params: any) => {
+      // // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑，则列表显示的还是编辑前的数据
+      // ebooks.value = [];  我的版本不用这句就可以动态刷新表单
       loading.value = true;
       axios.get("/ebook/list", {
         params:{
