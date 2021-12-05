@@ -86,26 +86,40 @@ export default defineComponent({
       });
     };
 
+    const handleQueryEbook = ()=>{
+      axios.get("/ebook/list",{
+        params:{
+          page:1,
+          size:ebook_num,
+          categoryId2:categoryId2,
+        }
+      })
+          .then((response)=> {
+            const data = response.data;
+            ebooks.value = data.content.list;
+          });
+    }
+
     const isShowWelcome = ref(true);
+    let categoryId2 = 0;
 
     const handleClick = (value:any)=>{
       // console.log("菜单点击");
-      // if(value.key === 'welcome'){
-      //   isShowWelcome.value = true;
-      // }else{
-      //   isShowWelcome.value = false;
-      // }  简化如下：
-      isShowWelcome.value = value.key === 'welcome';
+      if(value.key === 'welcome'){
+        isShowWelcome.value = true;
+      }else{
+        categoryId2 = value.key;
+        isShowWelcome.value = false;
+        handleQueryEbook();
+      }
+      // 简化如下：
+      // isShowWelcome.value = value.key === 'welcome';
     };
 
+    const ebook_num = 1000;
     //页面初始时调用
     onMounted(()=>{
       handleQueryCategory();
-      axios.get("/ebook/all")
-          .then((response)=> {
-            const data = response.data;
-            ebooks.value = data.content;
-          })
     });
 
     return{
