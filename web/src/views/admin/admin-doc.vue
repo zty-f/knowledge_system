@@ -67,14 +67,23 @@
       </a-form-item>
     </a-form>
   </a-modal>
+  <a-modal
+      title="文档表单"
+      v-model:visible="modalVisible"
+      :confirm-loading="modalLoading"
+      @ok="handleModalOk"
+  >
+
+  </a-modal>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import {createVNode, defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
-import {message} from "ant-design-vue";
+import {message, Modal} from "ant-design-vue";
 import { Tool } from '@/util/tool';
 import {useRoute} from "vue-router";
+import {ExclamationCircleOutlined} from "@ant-design/icons-vue";
 
 export default defineComponent({
   name: 'AdminDoc',
@@ -201,7 +210,8 @@ export default defineComponent({
       }
     };
 
-    let ids:Array<string> =[];
+    const deleteIds:Array<string> =[];
+    const deleteNames: Array<string> = [];
     /**
      * 获取删除文档以及它的树枝节点的全部id
      */
@@ -214,7 +224,8 @@ export default defineComponent({
           // 如果当前节点就是目标节点
           console.log("disabled", node);
           // 将目标节点id放入ids
-          ids.push(id);
+          deleteIds.push(id);
+          deleteNames.push(node.name);
           // 遍历所有子节点
           const children = node.children;
           if (Tool.isNotEmpty(children)) {
@@ -267,14 +278,24 @@ export default defineComponent({
      */
     const handleDelete = (id:number) => {
       getDeleteIds(level1.value,id);
-      axios.delete("/doc/delete/"+ids.join(",")).then((response) => {
-        const data = response.data;
-        if(data.success){
-        handleQuery();
+      Modal.confirm({
+        title: '重要提醒',
+        icon: createVNode(ExclamationCircleOutlined),
+        content: '将删除：【' + deleteNames.join("，") + "】删除后不可恢复，确认删除？",
+        onOk() {
+          axios.delete("/doc/delete/" + deleteIds.join(",")).then((response) => {
+            const data = response.data;
+            if (data.success) {
+              handleQuery();
+            } else {
+              message.error(data.message);
+            }
+          });
+          // 清空数组，否则多次删除时，数组会一直增加,每次删除完成后清空ids数据，防止数据叠加传递
+          deleteIds.length = 0;
+          deleteNames.length = 0;
         }
-      });
-      ids = []; //每次删除完成后清空ids数据，防止数据叠加传递
-    };
+    })};
 
     onMounted(() => {
       handleQuery();
