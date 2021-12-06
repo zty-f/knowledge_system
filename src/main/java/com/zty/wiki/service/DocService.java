@@ -92,5 +92,12 @@ public class DocService {
     public void delete(Long id){
         docMapper.deleteByPrimaryKey(id);
     }
+    //方法重载
+    public void delete(List<String> ids){
+        DocExample example = new DocExample();
+        DocExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIn(ids);
+        docMapper.deleteByExample(example);
+    }
 
 }
