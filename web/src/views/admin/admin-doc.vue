@@ -67,14 +67,7 @@
       </a-form-item>
     </a-form>
   </a-modal>
-  <a-modal
-      title="文档表单"
-      v-model:visible="modalVisible"
-      :confirm-loading="modalLoading"
-      @ok="handleModalOk"
-  >
 
-  </a-modal>
 </template>
 
 <script lang="ts">
