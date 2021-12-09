@@ -10,8 +10,10 @@ package com.zty.wiki.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zty.wiki.domain.Content;
 import com.zty.wiki.domain.Doc;
 import com.zty.wiki.domain.DocExample;
+import com.zty.wiki.mapper.ContentMapper;
 import com.zty.wiki.mapper.DocMapper;
 import com.zty.wiki.req.DocQueryReq;
 import com.zty.wiki.req.DocSaveReq;
@@ -32,6 +34,9 @@ public class DocService {
     private static final Logger LOG = LoggerFactory.getLogger(DocService.class);
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private ContentMapper contentMapper;
 
     @Resource
     private SnowFlake snowFlake;
@@ -74,15 +79,25 @@ public class DocService {
      */
     public void save(DocSaveReq req){
       Doc doc = CopyUtil.copy(req,Doc.class);
+      Content content = CopyUtil.copy(req,Content.class);
       if(ObjectUtils.isEmpty(req.getId())){
           //新增
           doc.setId(snowFlake.nextId());
           doc.setViewCount(0);
           doc.setVoteCount(0);
           docMapper.insert(doc);
+          //新增内容
+          content.setId(doc.getId());
+          contentMapper.insert(content);
       }else{
           // 更新
           docMapper.updateByPrimaryKey(doc);
+
+          //更新内容
+          int count = contentMapper.updateByPrimaryKeyWithBLOBs(content);
+          if(count==0){
+              contentMapper.insert(content);
+          }
       }
     }
 
