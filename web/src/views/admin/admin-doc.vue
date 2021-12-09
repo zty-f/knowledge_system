@@ -167,7 +167,7 @@ export default defineComponent({
     const treeSelectData = ref();
     treeSelectData.value = [];
     const doc = ref();
-    doc.value=[];
+    doc.value={};
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const editor = new E("#content");
