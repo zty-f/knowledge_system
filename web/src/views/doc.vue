@@ -104,7 +104,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style> /*全局样式*/
 /* wangeditor默认样式*/
 /* table样式*/
 .wangeditor table {
