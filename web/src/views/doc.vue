@@ -3,6 +3,7 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
+      <h3 v-if="level1.length===0">对不起，找不到文档内容或当前电子书还没有文档内容！</h3>
       <a-row>
         <a-col :span="6">
           <a-tree
