@@ -66,8 +66,9 @@ public class DocService {
      * 全部查询
      * @return
      */
-    public List<DocQueryResp> all() {
+    public List<DocQueryResp> all(Long ebookId) {
         DocExample example = new DocExample();
+        example.createCriteria().andEbookIdEqualTo(ebookId);
         example.setOrderByClause("sort asc");
         List<Doc> docList = docMapper.selectByExample(example);
         List<DocQueryResp> respList = CopyUtil.copyList(docList, DocQueryResp.class);
