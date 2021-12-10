@@ -11,6 +11,7 @@
               @select="onSelect"
               :replaceFields="{title:'name', key:'id', value:'id'}"
               :defaultExpandAll="true"
+              :defaultSelectedKeys="defaultSelectedKeys"
           />
         </a-col>
         <a-col :span="18">
@@ -37,6 +38,8 @@ export default defineComponent({
     const route = useRoute();
     const docs = ref();
     const html = ref();
+    const defaultSelectedKeys = ref();
+    defaultSelectedKeys.value = [];
 
 
     /**
@@ -52,6 +55,21 @@ export default defineComponent({
      **/
     const level1 = ref(); //一级文档树，children属性就是二级文档
     level1.value = [];
+
+    /**
+     * 文档内容查询
+     * */
+    const handleQueryContent = (id:number) => {
+      axios.get("/doc/findContent/"+id).then((response) => {
+        const data = response.data;
+        if(data.success){
+          html.value = data.content;
+        }else {
+          message.error(data.message);
+        }
+      });
+    };
+
     /**
      * 文档doc数据查询
      **/
@@ -62,20 +80,11 @@ export default defineComponent({
           docs.value = data.content;
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value,0);
-        }else {
-          message.error(data.message);
-        }
-      });
-    };
 
-    /**
-     * 文档内容查询
-     * */
-    const handleQueryContent = (id:number) => {
-      axios.get("/doc/findContent/"+id).then((response) => {
-        const data = response.data;
-        if(data.success){
-          html.value = data.content;
+          if(Tool.isNotEmpty(level1)){
+            defaultSelectedKeys.value = [level1.value[0].id];
+            handleQueryContent(defaultSelectedKeys.value);
+          }
         }else {
           message.error(data.message);
         }
@@ -99,6 +108,7 @@ export default defineComponent({
       level1,
       html,
       onSelect,
+      defaultSelectedKeys,
     }
   }
 });
