@@ -12,6 +12,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zty.wiki.domain.User;
 import com.zty.wiki.domain.UserExample;
+import com.zty.wiki.exception.BusinessException;
+import com.zty.wiki.exception.BusinessExceptionCode;
 import com.zty.wiki.mapper.UserMapper;
 import com.zty.wiki.req.UserQueryReq;
 import com.zty.wiki.req.UserSaveReq;
@@ -74,8 +76,13 @@ public class UserService {
       User user = CopyUtil.copy(req,User.class);
       if(ObjectUtils.isEmpty(req.getId())){
           //新增
-          user.setId(snowFlake.nextId());
-          userMapper.insert(user);
+          if(ObjectUtils.isEmpty(selectByLoginName(req.getLoginName()))){
+              user.setId(snowFlake.nextId());
+              userMapper.insert(user);
+          }else {
+            // 用户名已存在
+            throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
+          }
       }else{
           // 更新
           userMapper.updateByPrimaryKey(user);
@@ -87,6 +94,18 @@ public class UserService {
      */
     public void delete(Long id){
         userMapper.deleteByPrimaryKey(id);
+    }
+
+    public User selectByLoginName(String loginName){
+        UserExample example = new UserExample();
+        UserExample.Criteria criteria = example.createCriteria();
+        criteria.andLoginNameEqualTo(loginName);
+        List<User> userList = userMapper.selectByExample(example);
+        if(ObjectUtils.isEmpty(userList)){
+            return null;
+        }else{
+            return userList.get(0);
+        }
     }
 
 }
