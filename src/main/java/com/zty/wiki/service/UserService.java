@@ -1,0 +1,92 @@
+/**
+ * @author: zty
+ * @program: wiki
+ * @ClassName UserService
+ * @description:
+ * @create: 2021-11-20 12:24
+ * @Version 1.0
+ **/
+package com.zty.wiki.service;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.zty.wiki.domain.User;
+import com.zty.wiki.domain.UserExample;
+import com.zty.wiki.mapper.UserMapper;
+import com.zty.wiki.req.UserQueryReq;
+import com.zty.wiki.req.UserSaveReq;
+import com.zty.wiki.resp.UserQueryResp;
+import com.zty.wiki.resp.PageResp;
+import com.zty.wiki.util.CopyUtil;
+import com.zty.wiki.util.SnowFlake;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+@Service
+public class UserService {
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+    @Resource
+    private UserMapper userMapper;
+
+    @Resource
+    private SnowFlake snowFlake;
+
+    /**
+     * 分页查询
+     */
+    public PageResp<UserQueryResp> list(UserQueryReq req) {
+        UserExample example = new UserExample();
+        UserExample.Criteria criteria = example.createCriteria();
+        if (!ObjectUtils.isEmpty(req.getLoginName())) {
+            criteria.andLoginNameLike("%" + req.getLoginName() + "%");
+        }
+        // 增加查询支持分页功能
+        PageHelper.startPage(req.getPage(), req.getSize());
+        List<User> userList = userMapper.selectByExample(example);
+
+        PageInfo<User> pageInfo = new PageInfo<>(userList);
+        LOG.info("总行数：{}", pageInfo.getTotal()); //总行数
+        LOG.info("总页数：{}", pageInfo.getPages()); //总页数
+        // 使用工具类复制列表
+        List<UserQueryResp> respList = CopyUtil.copyList(userList, UserQueryResp.class);
+        PageResp<UserQueryResp> pageResp = new PageResp<>();
+        pageResp.setList(respList);
+        pageResp.setTotal(pageInfo.getTotal());
+        return pageResp;
+    }
+
+    public List<UserQueryResp> all() {
+        UserExample example = new UserExample();
+        List<User> userList = userMapper.selectByExample(example);
+        List<UserQueryResp> respList = CopyUtil.copyList(userList, UserQueryResp.class);
+        return respList;
+    }
+
+    /**
+     * 保存
+     */
+    public void save(UserSaveReq req){
+      User user = CopyUtil.copy(req,User.class);
+      if(ObjectUtils.isEmpty(req.getId())){
+          //新增
+          user.setId(snowFlake.nextId());
+          userMapper.insert(user);
+      }else{
+          // 更新
+          userMapper.updateByPrimaryKey(user);
+      }
+    }
+
+    /**
+     * 删除
+     */
+    public void delete(Long id){
+        userMapper.deleteByPrimaryKey(id);
+    }
+
+}

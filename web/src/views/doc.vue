@@ -34,7 +34,7 @@ import { Tool } from '@/util/tool';
 import {useRoute} from "vue-router";
 
 export default defineComponent({
-  name: 'AdminDoc',
+  name: 'Doc',
   setup() {
     const route = useRoute();
     const docs = ref();
