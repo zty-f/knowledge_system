@@ -15,10 +15,12 @@ import com.zty.wiki.domain.UserExample;
 import com.zty.wiki.exception.BusinessException;
 import com.zty.wiki.exception.BusinessExceptionCode;
 import com.zty.wiki.mapper.UserMapper;
+import com.zty.wiki.req.UserLoginReq;
 import com.zty.wiki.req.UserQueryReq;
 import com.zty.wiki.req.UserResetPasswordReq;
 import com.zty.wiki.req.UserSaveReq;
 import com.zty.wiki.resp.PageResp;
+import com.zty.wiki.resp.UserLoginResp;
 import com.zty.wiki.resp.UserQueryResp;
 import com.zty.wiki.util.CopyUtil;
 import com.zty.wiki.util.SnowFlake;
@@ -119,4 +121,25 @@ public class UserService {
         userMapper.updateByPrimaryKeySelective(user);
     }
 
+    /**
+     * 登录
+     */
+    public UserLoginResp login(UserLoginReq req){
+        User userDb = selectByLoginName(req.getLoginName());
+        if (ObjectUtils.isEmpty(userDb)){
+            // 用户名不存在
+            LOG.info("用户名不存在，{}",req.getLoginName());
+            throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+        }else {
+            if (userDb.getPassword().equals(req.getPassword())){
+                // 登录成功
+                UserLoginResp userLoginResp=CopyUtil.copy(userDb,UserLoginResp.class);
+                return userLoginResp;
+            }else {
+                // 密码错误
+                LOG.info("密码错误，输入密码：{}，数据库密码：{}",req.getPassword(),userDb.getPassword());
+                throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+            }
+        }
+    }
 }

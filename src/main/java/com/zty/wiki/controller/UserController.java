@@ -8,11 +8,13 @@
  **/
 package com.zty.wiki.controller;
 
+import com.zty.wiki.req.UserLoginReq;
 import com.zty.wiki.req.UserQueryReq;
 import com.zty.wiki.req.UserResetPasswordReq;
 import com.zty.wiki.req.UserSaveReq;
 import com.zty.wiki.resp.CommonResp;
 import com.zty.wiki.resp.PageResp;
+import com.zty.wiki.resp.UserLoginResp;
 import com.zty.wiki.resp.UserQueryResp;
 import com.zty.wiki.service.UserService;
 import org.springframework.util.DigestUtils;
@@ -68,4 +70,12 @@ public class UserController {
         return resp;
     }
 
+    @PostMapping("/login")
+    public CommonResp login(@Valid @RequestBody UserLoginReq req){
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp<UserLoginResp> resp = new CommonResp<>();
+        UserLoginResp userLoginResp=userService.login(req);
+        resp.setContent(userLoginResp);
+        return resp;
+    }
 }
