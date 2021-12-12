@@ -9,10 +9,11 @@
 package com.zty.wiki.controller;
 
 import com.zty.wiki.req.UserQueryReq;
+import com.zty.wiki.req.UserResetPasswordReq;
 import com.zty.wiki.req.UserSaveReq;
 import com.zty.wiki.resp.CommonResp;
-import com.zty.wiki.resp.UserQueryResp;
 import com.zty.wiki.resp.PageResp;
+import com.zty.wiki.resp.UserQueryResp;
 import com.zty.wiki.service.UserService;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +57,14 @@ public class UserController {
     public CommonResp delete(@PathVariable Long  id){
         CommonResp resp = new CommonResp<>();
         userService.delete(id);
+        return resp;
+    }
+
+    @PostMapping("/resetPassword")
+    public CommonResp resetPassword(@Valid @RequestBody UserResetPasswordReq req){
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp resp = new CommonResp<>();
+        userService.resetPassword(req);
         return resp;
     }
 

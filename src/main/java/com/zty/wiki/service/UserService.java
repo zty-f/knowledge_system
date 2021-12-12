@@ -16,9 +16,10 @@ import com.zty.wiki.exception.BusinessException;
 import com.zty.wiki.exception.BusinessExceptionCode;
 import com.zty.wiki.mapper.UserMapper;
 import com.zty.wiki.req.UserQueryReq;
+import com.zty.wiki.req.UserResetPasswordReq;
 import com.zty.wiki.req.UserSaveReq;
-import com.zty.wiki.resp.UserQueryResp;
 import com.zty.wiki.resp.PageResp;
+import com.zty.wiki.resp.UserQueryResp;
 import com.zty.wiki.util.CopyUtil;
 import com.zty.wiki.util.SnowFlake;
 import org.slf4j.Logger;
@@ -70,7 +71,7 @@ public class UserService {
     }
 
     /**
-     * 保存
+     * 编辑 保存
      */
     public void save(UserSaveReq req){
       User user = CopyUtil.copy(req,User.class);
@@ -108,6 +109,14 @@ public class UserService {
         }else{
             return userList.get(0);
         }
+    }
+
+    /**
+     * 修改密码
+     */
+    public void resetPassword(UserResetPasswordReq req){
+        User user = CopyUtil.copy(req,User.class);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
 }
