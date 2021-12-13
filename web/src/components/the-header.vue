@@ -1,8 +1,18 @@
 <template>
   <a-layout-header class="header">
     <div class="logo" />
+    <a-popconfirm
+        title="确认退出登录？"
+        ok-text="是"
+        cancel-text="否"
+        @confirm="logout()"
+    >
+      <a class="login-menu" v-show="user.id">
+        <span>退出登录</span>
+      </a>
+    </a-popconfirm>
     <a class="login-menu" v-show="user.id">
-      <span>您好：{{ user.name }}</span>
+      <span>您好:{{ user.name }}</span>
     </a>
     <a class="login-menu" @click="showLoginModel" v-show="!user.id">
       <span>登录</span>
@@ -81,23 +91,36 @@ export default defineComponent({
      */
     const login = () => {
       console.log("开始登录")
-      loginModalLoading.value=true;
+      loginModalLoading.value = true;
       // 前端md5加密
-      loginUser.value.password = hexMd5(loginUser.value.password+KEY);
+      loginUser.value.password = hexMd5(loginUser.value.password + KEY);
       axios.post("/user/login", loginUser.value).then((response) => {
         loginModalLoading.value = false;
         const data = response.data;
-        if(data.success){
+        if (data.success) {
           loginModalVisible.value = false;
           message.success("登录成功！");
-          store.commit("setUser",user.value);
+          store.commit("setUser", data.content);
+        } else {
+          message.error(data.message);
+        }
+      });
+    }
+      /**
+     * 退出登录
+     */
+    const logout = () => {
+      console.log("开始退出登录")
+      axios.get("/user/logout/"+ user.value.token).then((response) => {
+        const data = response.data;
+        if(data.success){
+          message.success("退出登录成功！");
+          store.commit("setUser",{});
         }else{
           message.error(data.message);
         }
       });
     };
-
-
 
     return{
       loginModalVisible,
@@ -106,6 +129,7 @@ export default defineComponent({
       login,
       showLoginModel,
       user,
+      logout,
     }
   }
 });
@@ -115,5 +139,6 @@ export default defineComponent({
  .login-menu{
   float: right;
   color: white;
+   padding-left: 10px;
  }
 </style>
