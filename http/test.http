@@ -1,4 +1,4 @@
-GET http://localhost:8080/hello
+GET http://localhost:8081/hello
 #Accept: application/json
 
 # 单元测试
@@ -14,23 +14,23 @@ client.test("test-hello",function() {
 %}
 ###
 
-POST http://localhost:8080/hello/post
+POST http://localhost:8081/hello/post
 Content-Type: application/x-www-form-urlencoded
 
 name=zty
 
 ###
 
-GET http://localhost:8080/test/list
+GET http://localhost:8081/test/list
 
 
 ###
-GET http://localhost:8880/redis/set/123/test
+GET http://localhost:8081/redis/set/123/test
 Accept: application/json
 
 ###
 
-GET http://localhost:8880/redis/get/70617017153097728
+GET http://localhost:8081/redis/get/123
 Accept: application/json
 
 ###
