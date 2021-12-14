@@ -94,7 +94,7 @@ public class UserController {
         LOG.info("生成单点登录token:{}，并放入redis中保存",token);
         userLoginResp.setToken(token.toString());
         // 3600*24, TimeUnit.SECONDS 过期时间1天
-        redisTemplate.opsForValue().set(token, JSONObject.toJSONString(userLoginResp),3600*24, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(token.toString(), JSONObject.toJSONString(userLoginResp),3600*24, TimeUnit.SECONDS);
 
         resp.setContent(userLoginResp);
         return resp;
