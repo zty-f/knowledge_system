@@ -49,11 +49,11 @@
       :confirm-loading="loginModalLoading"
       @ok="login"
   >
-    <a-form :model="loginUser" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
+    <a-form :model="loginUser" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" :rules="rules">
       <a-form-item label="用户名">
         <a-input v-model:value="loginUser.loginName"/>  <!--加两个 ！可以跳过数据类型效验-->
       </a-form-item>
-      <a-form-item label="密码">
+      <a-form-item label="密码" name="password">
         <a-input v-model:value="loginUser.password" type="password"/>
       </a-form-item>
     </a-form>
@@ -66,7 +66,6 @@ import {computed, defineComponent, ref} from 'vue';
 import axios from "axios";
 import {message} from "ant-design-vue";
 import store from "@/store";
-
 declare let hexMd5:any;
 declare let KEY:any;
 export default defineComponent({
@@ -80,7 +79,6 @@ export default defineComponent({
     });
     // 登录后保存
     const user = computed(()=>store.state.user);
-
     const loginModalVisible = ref(false);
     const loginModalLoading = ref(false);
     const showLoginModel = () => {
@@ -122,6 +120,15 @@ export default defineComponent({
       });
     };
 
+    /**
+     * 前端登录表单输入效验
+     */
+    const rules = {
+      password: [
+        { required: true, pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,32}$/, message: '请输入正确的密码格式！',  trigger: 'change' }
+      ],
+    };
+
     return{
       loginModalVisible,
       loginModalLoading,
@@ -130,6 +137,8 @@ export default defineComponent({
       showLoginModel,
       user,
       logout,
+
+      rules,
     }
   }
 });
