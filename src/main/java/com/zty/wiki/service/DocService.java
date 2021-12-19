@@ -15,6 +15,7 @@ import com.zty.wiki.domain.Doc;
 import com.zty.wiki.domain.DocExample;
 import com.zty.wiki.mapper.ContentMapper;
 import com.zty.wiki.mapper.DocMapper;
+import com.zty.wiki.mapper.DocMapperCust;
 import com.zty.wiki.req.DocQueryReq;
 import com.zty.wiki.req.DocSaveReq;
 import com.zty.wiki.resp.DocQueryResp;
@@ -40,6 +41,9 @@ public class DocService {
 
     @Resource
     private SnowFlake snowFlake;
+
+    @Resource
+    private DocMapperCust docMapperCust;
 
     /**
      * 分页查询
@@ -118,6 +122,7 @@ public class DocService {
 
     public String findContent(Long id){
         Content content = contentMapper.selectByPrimaryKey(id);
+        docMapperCust.increaseViewCount(id);
         if(ObjectUtils.isEmpty(content)){
             return "";
         }else{
