@@ -80,6 +80,7 @@ export default defineComponent({
       axios.get("/doc/findContent/"+id).then((response) => {
         const data = response.data;
         if(data.success){
+          doc.value.viewCount++;
           html.value = data.content;
         }else {
           message.error(data.message);
