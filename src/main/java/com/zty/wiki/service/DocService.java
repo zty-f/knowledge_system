@@ -13,6 +13,8 @@ import com.github.pagehelper.PageInfo;
 import com.zty.wiki.domain.Content;
 import com.zty.wiki.domain.Doc;
 import com.zty.wiki.domain.DocExample;
+import com.zty.wiki.exception.BusinessException;
+import com.zty.wiki.exception.BusinessExceptionCode;
 import com.zty.wiki.mapper.ContentMapper;
 import com.zty.wiki.mapper.DocMapper;
 import com.zty.wiki.mapper.DocMapperCust;
@@ -21,6 +23,8 @@ import com.zty.wiki.req.DocSaveReq;
 import com.zty.wiki.resp.DocQueryResp;
 import com.zty.wiki.resp.PageResp;
 import com.zty.wiki.util.CopyUtil;
+import com.zty.wiki.util.RedisUtil;
+import com.zty.wiki.util.RequestContext;
 import com.zty.wiki.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +48,9 @@ public class DocService {
 
     @Resource
     private DocMapperCust docMapperCust;
+
+    @Resource
+    private RedisUtil redisUtil;
 
     /**
      * 分页查询
@@ -131,7 +138,14 @@ public class DocService {
     }
 
     public void vote(Long id){
-        docMapperCust.increaseVoteCount(id);
+        //远程ip+doc.id作为key，24小时不能重复
+        String ip = RequestContext.getRemoteAddr();
+        if(redisUtil.validateRepeat("DOC_VOTE_"+id+"_"+ip,3600*24)){
+            docMapperCust.increaseVoteCount(id);
+        }else {
+            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
+        }
     }
+
 
 }
