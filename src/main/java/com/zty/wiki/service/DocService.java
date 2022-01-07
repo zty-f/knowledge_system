@@ -127,6 +127,9 @@ public class DocService {
         docMapper.deleteByExample(example);
     }
 
+    /**
+     * 查找文档内容
+     */
     public String findContent(Long id){
         Content content = contentMapper.selectByPrimaryKey(id);
         docMapperCust.increaseViewCount(id);
@@ -137,6 +140,9 @@ public class DocService {
         }
     }
 
+    /**
+     * 投票
+     */
     public void vote(Long id){
         //远程ip+doc.id作为key，24小时不能重复
         String ip = RequestContext.getRemoteAddr();
@@ -147,5 +153,10 @@ public class DocService {
         }
     }
 
-
+    /**
+     * 定时更新电子书信息
+     */
+    public void updateEbookInfo(){
+        docMapperCust.updateEbookInfo();
+    }
 }
