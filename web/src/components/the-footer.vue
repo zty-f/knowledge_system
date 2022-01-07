@@ -5,9 +5,11 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, computed, onMounted} from 'vue';
+import {defineComponent, computed, onMounted,h} from 'vue';
 import store from "@/store";
 import {Tool} from "@/util/tool";
+import {notification} from "ant-design-vue";
+import {SmileOutlined} from "@ant-design/icons-vue";
 export default defineComponent({
   name: 'the-footer',
   setup(){
@@ -20,6 +22,12 @@ export default defineComponent({
     };
     const onMessage = (event: any) => {
       console.log('WebSocket收到消息：', event.data);
+      notification.open({
+        message: '收到消息',
+        description:event.data,
+        duration: 3,
+        icon: h(SmileOutlined, { style: 'color: #108ee9' }),
+      });
     };
     const onError = () => {
       console.log('WebSocket连接错误，状态码：', websocket.readyState)
