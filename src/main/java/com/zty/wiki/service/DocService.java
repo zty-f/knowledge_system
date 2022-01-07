@@ -26,6 +26,7 @@ import com.zty.wiki.util.CopyUtil;
 import com.zty.wiki.util.RedisUtil;
 import com.zty.wiki.util.RequestContext;
 import com.zty.wiki.util.SnowFlake;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -56,6 +57,9 @@ public class DocService {
 
     @Resource
     private WebSocketService webSocketService;
+
+    @Resource
+    private RocketMQTemplate rocketMQTemplate;
 
     /**
      * 分页查询
@@ -160,7 +164,8 @@ public class DocService {
         //推送消息
         Doc docDb = docMapper.selectByPrimaryKey(id);
         String logId= MDC.get("LOG_ID");
-        webSocketService.sendInfo("【"+docDb.getName()+"】被点赞！",logId);
+        //webSocketService.sendInfo("【"+docDb.getName()+"】被点赞！",logId);
+        rocketMQTemplate.convertAndSend("VOTE_TOPIC","【"+docDb.getName()+"】被点赞！");
     }
     /**
      * 定时更新电子书信息
