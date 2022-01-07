@@ -28,7 +28,7 @@
       :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
   >
       <div class="welcome" v-show="isShowWelcome">
-        <h1>欢迎使用ZTY电子书管理系统！</h1>
+        <h1>欢迎使用ZTY知识库系统！</h1>
       </div>
       <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{ gutter:20,column:3}"
                :pagination="pagination" :data-source="ebooks">
