@@ -26,7 +26,6 @@ import com.zty.wiki.util.CopyUtil;
 import com.zty.wiki.util.RedisUtil;
 import com.zty.wiki.util.RequestContext;
 import com.zty.wiki.util.SnowFlake;
-import com.zty.wiki.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -54,7 +53,7 @@ public class DocService {
     private RedisUtil redisUtil;
 
     @Resource
-    private WebSocketServer webSocketServer;
+    private WebSocketService webSocketService;
 
     /**
      * 分页查询
@@ -157,9 +156,8 @@ public class DocService {
         }
         //推送消息
         Doc docDb = docMapper.selectByPrimaryKey(id);
-        webSocketServer.sendInfo("【"+docDb.getName()+"】被点赞！");
+        webSocketService.sendInfo("【"+docDb.getName()+"】被点赞！");
     }
-
     /**
      * 定时更新电子书信息
      */

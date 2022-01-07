@@ -7,12 +7,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @ComponentScan("com.zty")
 @SpringBootApplication
 @MapperScan("com.zty.wiki.mapper")
 @EnableScheduling
+@EnableAsync  //异步化
 public class KnowledgeSystemApplication {
     private static final Logger LOG  = LoggerFactory.getLogger(KnowledgeSystemApplication.class);
     public static void main(String[] args) {
