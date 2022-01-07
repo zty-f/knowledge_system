@@ -53,6 +53,7 @@ export class Tool {
   }
 
   /**
+   * websocket使用
    * 随机生成[len]长度的[radix]进制数
    * @param len
    * @param radix 默认62
@@ -69,4 +70,5 @@ export class Tool {
 
     return uuid.join('');
   }
+
 }
