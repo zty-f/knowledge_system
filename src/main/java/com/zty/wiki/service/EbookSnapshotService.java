@@ -26,4 +26,7 @@ public class EbookSnapshotService {
     public List<StatisticResp> getStatistic(){
         return ebookSnapshotMapperCust.getStatistic();
     }
+    public List<StatisticResp> get30Statistic(){
+        return ebookSnapshotMapperCust.get30Statistic();
+    }
 }
