@@ -1,0 +1,24 @@
+/**
+ * @author: zty
+ * @program: knowledge_system
+ * @ClassName EbookSnapshotService
+ * @description:
+ * @create: 2022-01-08 16:46
+ * @Version 1.0
+ **/
+package com.zty.wiki.service;
+
+import com.zty.wiki.mapper.EbookSnapshotMapperCust;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+
+@Service
+public class EbookSnapshotService {
+    @Resource
+    private EbookSnapshotMapperCust ebookSnapshotMapperCust;
+
+    public void generateSnapshot(){
+        ebookSnapshotMapperCust.generateSnapshot();
+    }
+}
