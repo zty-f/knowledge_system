@@ -52,7 +52,7 @@
         group by
             t1.`date`
         order by
-            t1.`date` asc;
+            t1.`date` desc;
     </select>
 
 </mapper>
