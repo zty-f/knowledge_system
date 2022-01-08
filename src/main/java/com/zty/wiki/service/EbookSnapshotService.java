@@ -9,9 +9,10 @@
 package com.zty.wiki.service;
 
 import com.zty.wiki.mapper.EbookSnapshotMapperCust;
+import com.zty.wiki.resp.StatisticResp;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class EbookSnapshotService {
@@ -20,5 +21,9 @@ public class EbookSnapshotService {
 
     public void generateSnapshot(){
         ebookSnapshotMapperCust.generateSnapshot();
+    }
+
+    public List<StatisticResp> getStatistic(){
+        return ebookSnapshotMapperCust.getStatistic();
     }
 }

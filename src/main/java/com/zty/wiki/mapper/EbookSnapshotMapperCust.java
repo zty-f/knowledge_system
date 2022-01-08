@@ -7,7 +7,14 @@
  **/
 package com.zty.wiki.mapper;
 
+import com.zty.wiki.resp.StatisticResp;
+
+import java.util.List;
+
 public interface EbookSnapshotMapperCust {
 
-    public void generateSnapshot();
+     void generateSnapshot();
+
+     List<StatisticResp> getStatistic();
+
 }
