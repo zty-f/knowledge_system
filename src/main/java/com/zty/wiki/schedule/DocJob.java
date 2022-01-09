@@ -23,9 +23,9 @@ public class DocJob {
     private SnowFlake snowFlake;
 
     /**
-     * 每隔30秒钟执行一次电子书信息更新
+     * 每隔2分钟执行一次电子书信息更新
      */
-    @Scheduled(cron = "10/30 * * * * ?")
+    @Scheduled(cron = "0 0/2 * * * ? ")
     public void cron() {
         //增加日志流水号
         MDC.put("LOG_ID", String.valueOf(snowFlake.nextId()));
