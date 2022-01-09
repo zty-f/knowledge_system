@@ -188,6 +188,7 @@ export default defineComponent({
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const editor = new E("#content");
+    editor.config.uploadImgShowBase64 = true; //本地上传图片功能
     editor.config.zIndex = 0;  //元素覆盖层级，防止覆盖其他元素
 
     const handleSave = () => {
