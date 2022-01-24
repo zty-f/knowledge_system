@@ -356,6 +356,8 @@ export default defineComponent({
     onMounted(() => {
       handleQuery();
       editor.create();
+      //清空富文本框中的东西
+      editor.txt.html("");
     });
 
     return {
