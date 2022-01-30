@@ -120,6 +120,7 @@ export default defineComponent({
     const handleClick = (value:any)=>{
       // console.log("菜单点击");
       if(value.key === 'welcome'){
+        window.location.reload();
         isShowWelcome.value = true;
       }else{
         categoryId2 = value.key;
