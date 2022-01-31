@@ -22,9 +22,10 @@
         mode="horizontal"
         v-model:selectedKeys="selectedKeys1"
         :style="{ lineHeight: '64px' }"
+        @click="handleClick"
     >
-      <a-menu-item key="/" >
-        <router-link to="/">首页</router-link>
+      <a-menu-item key="welcome" >
+        <router-link to="/" >首页</router-link>
       </a-menu-item>
 
       <a-menu-item key="/about">
@@ -129,6 +130,15 @@ export default defineComponent({
       ],
     };
 
+    const handleClick = (value:any)=>{
+      // console.log("菜单点击");
+      if(value.key === 'welcome'){
+        window.location.reload();
+      }
+      // 简化如下：
+      // isShowWelcome.value = value.key === 'welcome';
+    };
+
     return{
       loginModalVisible,
       loginModalLoading,
@@ -137,7 +147,7 @@ export default defineComponent({
       showLoginModel,
       user,
       logout,
-
+      handleClick,
       rules,
     }
   }
