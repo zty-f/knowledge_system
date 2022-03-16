@@ -25,12 +25,12 @@ GET http://localhost:8081/test/list
 
 
 ###
-GET http://localhost:8081/redis/set/111/zty
+GET http://localhost:8081/redis/set/222/zty
 Accept: application/json
 
 ###
 
-GET http://localhost:8081/redis/get/71344628368019456
+GET http://localhost:8081/redis/get/111
 Accept: application/json
 
 ###
